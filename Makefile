@@ -1,4 +1,4 @@
-SOURCES := utils.c part1.c part2.c riscv.c
+ SOURCES := utils.c part1.c part2.c riscv.c
 HEADERS := types.h utils.h riscv.h
 PWD := $(shell pwd)
 CUNIT := -L $(PWD)/CUnit-install/lib -I $(PWD)/CUnit-install/include -llibcunit

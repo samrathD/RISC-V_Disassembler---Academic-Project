@@ -20,6 +20,7 @@ void write_branch(Instruction);
 
 void decode_instruction(uint32_t instruction_bits) {
     Instruction instruction = parse_instruction(instruction_bits);
+    
     switch(instruction.opcode) {
         case 0x33:
             write_rtype(instruction);
@@ -230,14 +231,17 @@ void write_branch(Instruction instruction) {
 
 void print_lui(Instruction instruction) {
     /* YOUR CODE HERE */
+    printf(LUI_FORMAT,instruction.utype.rd,instruction.utype.imm);
 }
 
 void print_jal(Instruction instruction) {
     /* YOUR CODE HERE */
+    printf(JAL_FORMAT,instruction.ujtype.rd, get_jump_offset(instruction));
 }
 
 void print_ecall(Instruction instruction) {
     /* YOUR CODE HERE */
+    printf(ECALL_FORMAT);
 }
 
 void print_rtype(char *name, Instruction instruction) {
@@ -248,16 +252,27 @@ void print_rtype(char *name, Instruction instruction) {
 
 void print_itype_except_load(char *name, Instruction instruction, int imm) {
     /* YOUR CODE HERE */
+    printf(ITYPE_FORMAT,name,instruction.itype.rd,
+    instruction.rtype.rs1,
+    sign_extend_number(imm,12));
 }
 
 void print_load(char *name, Instruction instruction) {
     /* YOUR CODE HERE */
+    // printf(LUI_FORMAT,instruction.utype.rd,instruction.utype.imm);
+     printf(MEM_FORMAT,name,instruction.itype.rd,instruction.itype.imm,
+     instruction.itype.rs1);
 }
 
 void print_store(char *name, Instruction instruction) {
     /* YOUR CODE HERE */
+    // printf("The imm 5 = %d\n",instruction.stype.imm5);
+    // printf("The imm7 is = %d\n", instruction.stype.imm7);
+    printf(MEM_FORMAT,name,instruction.stype.rs2,get_store_offset(instruction),instruction.stype.rs1);
 }
 
 void print_branch(char *name, Instruction instruction) {
     /* YOUR CODE HERE */
+    printf(BRANCH_FORMAT,name,instruction.sbtype.rs1,instruction.sbtype.rs2,
+    get_branch_offset(instruction));
 }

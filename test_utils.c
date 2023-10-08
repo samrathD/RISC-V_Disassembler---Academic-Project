@@ -11,7 +11,7 @@ void test_parse_instruction_itype();
 void test_parse_instruction_stype();
 void test_parse_instruction_sbtype();
 void test_parse_instruction_ujtype();
-void test_parse_instruction_utype();
+void test_parse_instruction_utype(); 
 
 int main(int arc, char **argv) {
     CU_pSuite pSuite1 = NULL;
