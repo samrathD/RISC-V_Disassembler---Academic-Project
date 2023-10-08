@@ -54,7 +54,6 @@ Instruction parse_instruction(uint32_t instruction_bits) {
     //Instruction
     instruction.itype.rd = instruction_bits & ((1U << 5)-1);
     instruction_bits >>= 5;
-    
     instruction.itype.funct3 = instruction_bits & ((1U << 3)-1);
     instruction_bits >>= 3;
     instruction.itype.rs1 = instruction_bits & ((1U << 5)-1);
