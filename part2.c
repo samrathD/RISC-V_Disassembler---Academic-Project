@@ -12,10 +12,14 @@ void execute_load(Instruction, Processor *, Byte *);
 void execute_store(Instruction, Processor *, Byte *);
 void execute_ecall(Processor *, Byte *);
 void execute_lui(Instruction, Processor *);
+void execute_custom_slt(Instruction,Processor *, Byte*);
 
 void execute_instruction(uint32_t instruction_bits, Processor *processor,Byte *memory) {    
     Instruction instruction = parse_instruction(instruction_bits);
     switch(instruction.opcode) {
+        case 0x2a:
+            execute_custom_slt( instruction, processor,memory);
+            break;
         case 0x33:
             execute_rtype(instruction, processor);
             break;
@@ -47,6 +51,29 @@ void execute_instruction(uint32_t instruction_bits, Processor *processor,Byte *m
     }
 }
 
+//Helper funnction to execute slt
+void execute_custom_slt(Instruction instruction,Processor *processor,Byte *memory){
+    switch(instruction.rtype.funct3){
+        case 0x4:
+            //SLT Custom
+            //Comparing rs1 and rs2
+            if(((sWord)processor->R[instruction.rtype.rs1])<
+                memory[(sWord)processor->R[instruction.rtype.rs2]]){
+                //Assigning value to rd
+                processor->R[instruction.rtype.rd] = 
+                load(memory,(sWord)processor->R[instruction.rtype.rs2],LENGTH_WORD);
+                }
+                
+            //Updating program counter
+            processor->PC+=4;
+            break;
+        default:
+                handle_invalid_instruction(instruction);
+                exit(-1);
+                break;
+            }
+
+}
 void execute_rtype(Instruction instruction, Processor *processor) {
     switch (instruction.rtype.funct3){
         case 0x0:
@@ -89,7 +116,6 @@ void execute_rtype(Instruction instruction, Processor *processor) {
                     processor->PC+=4;
                     break;
                 case 0x1:
-//**************************************************************************************************
                     // MULH rd = (rs1 * rs2)[63:32]
                     processor->R[instruction.rtype.rd] = 
                     ((((sDouble)processor->R[instruction.rtype.rs1])*
@@ -136,7 +162,6 @@ void execute_rtype(Instruction instruction, Processor *processor) {
             switch (instruction.rtype.funct7) {
                 case 0x0:
                 // SRL 
-//*****************************************************************************************************
                  processor->R[instruction.rtype.rd] = 
                     ((Word)processor->R[instruction.rtype.rs1])>>
                     ((Word)processor->R[instruction.rtype.rs2]);  
@@ -144,7 +169,6 @@ void execute_rtype(Instruction instruction, Processor *processor) {
                     break;
                 case 0x20:
                     // SRA
-//************************************************************************************************************
                     processor->R[instruction.rtype.rd] =
                     ((sWord)processor->R[instruction.rtype.rs1])>>
                     ((sWord)processor->R[instruction.rtype.rs2]);
@@ -227,6 +251,7 @@ void execute_itype_except_load(Instruction instruction, Processor *processor) {
             processor->PC+=4;
             break;
         case 0x5:
+        //SRLI
         //Checking bits form 5 to 11
         //If zero then perform a logical shift
         //Else perform an arithmetic shift
@@ -236,6 +261,7 @@ void execute_itype_except_load(Instruction instruction, Processor *processor) {
                     (sign_extend_number(instruction.itype.imm,12)&0xf);
                     processor->PC+=4;
             }
+        //SRAI
             else{
             processor->R[instruction.itype.rd] = 
                 (sWord)processor->R[instruction.itype.rs1]>>
@@ -437,9 +463,6 @@ void store(Byte *memory, Address address, Alignment alignment, Word value) {
     else if(alignment == LENGTH_HALF_WORD){
         memory[address] = (Byte)(value & 0x0000000ff);
         memory[address+1] = (Byte)((value & 0x0000ff00)>>8);
-        printf("Value is : %d ",value);
-        printf("Value at address:%d  ",memory[address]);
-        printf("Value at address+1:%d  ",memory[address+1]);
     }
     else if(alignment == LENGTH_BYTE){
         memory[address] = (Byte)(value & 0xff);
@@ -467,7 +490,6 @@ Word load(Byte *memory, Address address, Alignment alignment) {
         word|= (memory[address+3])<<24;
     }
     else if(alignment == LENGTH_HALF_WORD){
-        printf("I WAS HERE!!!!");
         word |= memory[address];
         word|= (memory[address+1])<<8;
         word = sign_extend_number(word,16);

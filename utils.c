@@ -24,6 +24,24 @@ Instruction parse_instruction(uint32_t instruction_bits) {
   instruction_bits >>= 7;
   
   switch (instruction.opcode) {
+  //custom instruction slt
+  case 0x2a:
+    instruction.rtype.rd = instruction_bits & ((1U << 5) - 1);
+    instruction_bits >>=5;
+
+    instruction.rtype.funct3 = instruction_bits & ((1U << 3) - 1);
+    instruction_bits >>= 3;
+
+    instruction.rtype.rs1 = instruction_bits & ((1U << 5) - 1);
+    instruction_bits >>= 5;
+
+    instruction.rtype.rs2 = instruction_bits & ((1U << 5) - 1);
+    instruction_bits >>= 5;
+
+    instruction.rtype.funct7 = instruction_bits & ((1U << 7) - 1);
+
+    break;
+
   // R-Type
   case 0x33:
     // instruction: 0000 0000 0000 0000 0000 destination : 01000
@@ -111,7 +129,6 @@ Instruction parse_instruction(uint32_t instruction_bits) {
 int get_branch_offset(Instruction instruction) {
   /* YOUR CODE HERE */
   int offset = 0x00000000;
-  //imm[12|10:5]     imm[4:1|11] 
 
   //Getting mask for bits 1 to 4
   //Set 1 to 4 bits
@@ -125,7 +142,7 @@ int get_branch_offset(Instruction instruction) {
   //Getting mask for 12 bit
   //Shift the number by 12
   //Set 12th bit of offset
-  offset|= (instruction.sbtype.imm7<<12) & 0x000001000;
+  offset|= (instruction.sbtype.imm7<<6) & 0x000001000;
 
   //Getting mask for bits 10 to 5
   //Shift the number by 5
@@ -139,18 +156,6 @@ int get_branch_offset(Instruction instruction) {
  * given jump instruction */
 int get_jump_offset(Instruction instruction) {
   /* YOUR CODE HERE */
-//   int offset = 0x00000000000000000000;
-//   
-//  //Get the value from the first 10 bits
-//  offset|=(instruction.ujtype.imm) & 0x000003FF;
-//  offset|=(instruction.ujtype.imm>>10)& 0x400;
-//  offset|=(instruction.ujtype.imm)
-//  //Get the value from the 20th bit
-//   offset |= (instruction.ujtype.imm) & 0x80000;
-//   offset|= (instruction.ujtype.imm)&
-
-//   // imm
-//   return 0;
    // Initialize the offset to 0
     int offset = 0x00000000;
 //imm[20|10:1|11|19:12]
@@ -158,7 +163,7 @@ int get_jump_offset(Instruction instruction) {
     // imm[20]
     //Mask the 20th bit
     // Set the 20th bit
-    offset |= (instruction.ujtype.imm<<1 & 0x00100000);
+    offset |= (instruction.ujtype.imm << 1 & 0x00100000);
     // imm[10:1]
     //Mask the next 10 bits by shifting imm 8 to left
     // Extract bits 1 to 10 

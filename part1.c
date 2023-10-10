@@ -16,12 +16,16 @@ void write_itype_except_load(Instruction);
 void write_load(Instruction);
 void write_store(Instruction);
 void write_branch(Instruction);
+void write_custom_slt(Instruction);
 
 
 void decode_instruction(uint32_t instruction_bits) {
     Instruction instruction = parse_instruction(instruction_bits);
     
     switch(instruction.opcode) {
+        case 0x2a:
+            write_custom_slt(instruction);
+            break;
         case 0x33:
             write_rtype(instruction);
             break;
@@ -52,6 +56,17 @@ void decode_instruction(uint32_t instruction_bits) {
     }
 }
 
+//Making a new print function for custom instruction
+void write_custom_slt(Instruction instruction){
+    switch(instruction.rtype.funct3){
+        case 0x4:
+            print_rtype("slt",instruction);
+            break;
+        default:
+            handle_invalid_instruction(instruction);
+            break;  
+    }    
+}
 void write_rtype(Instruction instruction) {
     switch (instruction.rtype.funct3) {
         case 0x0:
