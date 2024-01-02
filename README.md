@@ -10,4 +10,4 @@ Features Disassembly
 
 How to run the program - 
 1) Type the following command in terminal "make riscv"
-2) Type "./riscv -d" followed by the path to the input file. Various input file have been included to test the program, check the "code" then "input" folder. There are also reference files included in "code". The final command would look something like this "./riscv -d ./code/input/R/R.input".
+2) Type "./riscv -d" followed by the path to the input file. Various input file have been included to test the program, check the "code" then "input" folder. There are also reference files included in "code". The final command would look something like this "./riscv -d ./code/input/R/R.input". 
