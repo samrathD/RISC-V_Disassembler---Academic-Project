@@ -1,2 +1,5 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/X2znD83I)
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=12050977&assignment_repo_type=AssignmentRepo)
+This is a simple RISC-V Disassembler implemented in the C programming language.
+
+Description The RISC-V Disassembler is designed to take RISC-V machine code instructions and convert them into human-readable assembly language instructions. It parses the binary machine code and produces the corresponding assembly language representation. This program was part of a course, CMPT 295 at Simon Fraser University. Various files in binary format have been included to test the program
+
+Features Disassembly: Converts RISC-V machine code to assembly language instructions. User-Friendly: Provides a human-readable output for a better understanding of machine code.
