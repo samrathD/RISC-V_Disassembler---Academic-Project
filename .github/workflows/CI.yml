@@ -12,7 +12,8 @@ jobs:
     # Name the Job
     name: Continuous-Testing
     # Set the type of machine to run on
-    runs-on: self-hosted
+    #runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       # Checks out a copy of your repository on the ubuntu-latest machine
